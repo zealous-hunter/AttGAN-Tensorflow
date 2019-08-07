@@ -258,6 +258,7 @@ try:
             if (it + 1) % 1000 == 0:
                 save_path = saver.save(sess, '%s/Epoch_(%d)_(%dof%d).ckpt' % (ckpt_dir, epoch, it_in_epoch, it_per_epoch))
                 print('Model is saved at %s!' % save_path)
+                archive()
 
             # sample
             if (it + 1) % 100 == 0:
@@ -272,7 +273,6 @@ try:
                 save_dir = './output/%s/sample_training' % experiment_name
                 pylib.mkdir(save_dir)
                 im.imwrite(im.immerge(sample, n_sample, 1), '%s/Epoch_(%d)_(%dof%d).jpg' % (save_dir, epoch, it_in_epoch, it_per_epoch))
-                archive()
 except:
     traceback.print_exc()
 finally:
