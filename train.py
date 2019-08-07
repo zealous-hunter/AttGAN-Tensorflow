@@ -7,6 +7,8 @@ import datetime
 from functools import partial
 import json
 import traceback
+import tarfile
+import shutil
 
 
 import imlib as im
@@ -50,7 +52,7 @@ parser.add_argument('--n_sample', dest='n_sample', type=int, default=64, help='#
 # others
 parser.add_argument('--use_cropped_img', dest='use_cropped_img', action='store_true')
 parser.add_argument('--experiment_name', dest='experiment_name', default=datetime.datetime.now().strftime("%I:%M%p on %B %d, %Y"))
-
+parser.add_argument('--archive', dest='archive', type=str, default=None)
 args = parser.parse_args()
 # model
 atts = args.atts
@@ -83,6 +85,14 @@ pylib.mkdir('./output/%s' % experiment_name)
 with open('./output/%s/setting.txt' % experiment_name, 'w') as f:
     f.write(json.dumps(vars(args), indent=4, separators=(',', ':')))
 
+
+def archive():
+    target = args.archive
+    if target is None:
+        return
+    with tarfile.open(target, 'w') as ball:
+        ball.add('./output')
+        print(f'Ouput has been archived to {target}')
 
 # ==============================================================================
 # =                                   graphs                                   =
@@ -262,9 +272,11 @@ try:
                 save_dir = './output/%s/sample_training' % experiment_name
                 pylib.mkdir(save_dir)
                 im.imwrite(im.immerge(sample, n_sample, 1), '%s/Epoch_(%d)_(%dof%d).jpg' % (save_dir, epoch, it_in_epoch, it_per_epoch))
+                archive()
 except:
     traceback.print_exc()
 finally:
     save_path = saver.save(sess, '%s/Epoch_(%d)_(%dof%d).ckpt' % (ckpt_dir, epoch, it_in_epoch, it_per_epoch))
+    archive()
     print('Model is saved at %s!' % save_path)
     sess.close()
