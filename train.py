@@ -92,7 +92,7 @@ def archive():
         return
     with tarfile.open(target, 'w') as ball:
         ball.add('./output')
-        print(f'Ouput has been archived to {target}')
+        print(f'Ouput has been archived to %s' % (target))
 
 # ==============================================================================
 # =                                   graphs                                   =
