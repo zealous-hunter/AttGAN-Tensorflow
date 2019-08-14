@@ -261,7 +261,7 @@ try:
                 archive()
 
             # sample
-            if (it + 1) % 100 == 0:
+            if (it + 1) % 1000 == 0:
                 x_sample_opt_list = [xa_sample_ipt, np.full((n_sample, img_size, img_size // 10, 3), -1.0)]
                 for i, b_sample_ipt in enumerate(b_sample_ipt_list):
                     _b_sample_ipt = (b_sample_ipt * 2 - 1) * thres_int
